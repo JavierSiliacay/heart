@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Heart Formation Modes</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #ff6b9d, #ffc0cb, #ff69b4);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .title {
+      font-size: 2.5rem;
+      color: #fff;
+      margin-bottom: 2rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      animation: pulse 2s infinite;
+      text-align: center;
+    }
+
+    .mode-selector {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .mode-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 25px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255,255,255,0.3);
+      font-size: 0.9rem;
+    }
+
+    .mode-btn:hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.05);
+    }
+
+    .mode-btn.active {
+      background: linear-gradient(45deg, #ff1744, #e91e63);
+      box-shadow: 0 4px 15px rgba(255,23,68,0.4);
+      transform: scale(1.1);
+    }
+
+    .heart-container {
+      position: relative;
+      width: 400px;
+      height: 400px;
+      margin: 0 auto;
+    }
+
+    .heart-particle {
+      position: absolute;
+      font-size: 20px;
+      color: #ff1744;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 10;
+    }
+
+    .info-panel {
+      background: rgba(255,255,255,0.9);
+      padding: 20px 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      margin-top: 2rem;
+      text-align: center;
+      max-width: 500px;
+      backdrop-filter: blur(10px);
+    }
+
+    .info-text {
+      color: #d81b60;
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    .mode-description {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    /* Spiral Animation */
+    .spiral-in {
+      animation: spiralIn 2s ease-out forwards;
+    }
+
+    @keyframes spiralIn {
+      0% {
+        transform: rotate(0deg) translateX(300px) rotate(0deg) scale(0.5);
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: rotate(720deg) translateX(0px) rotate(-720deg) scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Burst Animation */
+    .burst-in {
+      animation: burstIn 2s ease-out forwards;
+    }
+
+    @keyframes burstIn {
+      0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 0;
+      }
+      30% {
+        transform: scale(3) rotate(180deg);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(1) rotate(360deg);
+        opacity: 1;
+      }
+    }
+
+    /* Wave Animation */
+    .wave-in {
+      animation: waveIn 2.5s ease-out forwards;
+    }
+
+    @keyframes waveIn {
+      0% {
+        transform: translateY(400px) scale(0.3);
+        opacity: 0;
+      }
+      30% {
+        transform: translateY(-30px) scale(0.8);
+        opacity: 0.8;
+      }
+      60% {
+        transform: translateY(15px) scale(1.1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(0px) scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Cascade Animation */
+    .cascade-in {
+      animation: cascadeIn 2s ease-out forwards;
+    }
+
+    @keyframes cascadeIn {
+      0% {
+        transform: translateX(-500px) rotate(-180deg) scale(0.3);
+        opacity: 0;
+      }
+      60% {
+        transform: translateX(20px) rotate(10deg) scale(1.2);
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateX(0px) rotate(0deg) scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Magnetic Animation */
+    .magnetic-in {
+      animation: magneticIn 2.2s ease-out forwards;
+    }
+
+    @keyframes magneticIn {
+      0% {
+        transform: scale(0.1) rotate(0deg);
+        opacity: 0;
+      }
+      40% {
+        transform: scale(2) rotate(270deg);
+        opacity: 0.7;
+      }
+      80% {
+        transform: scale(0.8) rotate(350deg);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1) rotate(360deg);
+        opacity: 1;
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* Background sparkles */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 20% 20%, rgba(255,182,193,0.3) 2px, transparent 2px),
+        radial-gradient(circle at 80% 80%, rgba(255,105,180,0.3) 2px, transparent 2px);
+      background-size: 100px 100px, 150px 150px;
+      animation: float 15s infinite linear;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(-100vh) rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .title { font-size: 2rem; }
+      .heart-container { width: 300px; height: 300px; }
+      .mode-selector { gap: 10px; }
+      .mode-btn { padding: 10px 18px; font-size: 0.8rem; }
+      .info-panel { margin-top: 1rem; padding: 15px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="title">Vier <3 Kyla</h1>
+  
+  <div class="mode-selector">
+    <button class="mode-btn active" onclick="startAnimation('spiral')">Spiral Hearts</button>
+    <button class="mode-btn" onclick="startAnimation('burst')">Heart Burst</button>
+    <button class="mode-btn" onclick="startAnimation('wave')">Wave Dance</button>
+    <button class="mode-btn" onclick="startAnimation('cascade')">Cascade Flow</button>
+    <button class="mode-btn" onclick="startAnimation('magnetic')">Magnetic Pull</button>
+  </div>
+
+  <div class="heart-container" id="heartContainer">
+    <!-- Hearts will be generated here -->
+  </div>
+
+  <div class="info-panel">
+    <div class="info-text" id="modeTitle">Spiral Hearts Mode</div>
+    <div class="mode-description" id="modeDescription">Hearts spiral from the outside, dancing inward to form a beautiful heart shape</div>
+  </div>
+
+  <script>
+    let currentMode = 'spiral';
+    let isAnimating = false;
+
+    const modes = {
+      spiral: {
+        title: 'Spiral Hearts Mode',
+        description: 'Hearts spiral from the outside, dancing inward to form a beautiful heart shape',
+        class: 'spiral-in',
+        delay: 80
+      },
+      burst: {
+        title: 'Heart Burst Mode',
+        description: 'Hearts explode outward then contract back to form a perfect heart',
+        class: 'burst-in',
+        delay: 60
+      },
+      wave: {
+        title: 'Wave Dance Mode',
+        description: 'Hearts flow like ocean waves, bouncing up and down into heart formation',
+        class: 'wave-in',
+        delay: 100
+      },
+      cascade: {
+        title: 'Cascade Flow Mode',
+        description: 'Hearts cascade from the side like a waterfall of love',
+        class: 'cascade-in',
+        delay: 90
+      },
+      magnetic: {
+        title: 'Magnetic Pull Mode',
+        description: 'Hearts are magnetically drawn together, spinning into perfect formation',
+        class: 'magnetic-in',
+        delay: 70
+      }
+    };
+
+    // Generate heart shape coordinates
+    function generateHeartPositions() {
+      const positions = [];
+      const centerX = 200;
+      const centerY = 180;
+      const scale = 6;
+
+      // Heart equation: x = 16sin³(t), y = 13cos(t) - 5cos(2t) - 2cos(3t) - cos(4t)
+      for (let t = 0; t < 2 * Math.PI; t += 0.2) {
+        const x = 16 * Math.pow(Math.sin(t), 3);
+        const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+        
+        positions.push({
+          x: centerX + x * scale,
+          y: centerY - y * scale
+        });
+      }
+
+      return positions;
+    }
+
+    function startAnimation(mode) {
+      if (isAnimating) return;
+
+      // Update active button
+      document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Update mode info
+      currentMode = mode;
+      document.getElementById('modeTitle').textContent = modes[mode].title;
+      document.getElementById('modeDescription').textContent = modes[mode].description;
+
+      // Clear existing hearts
+      const container = document.getElementById('heartContainer');
+      container.innerHTML = '';
+
+      isAnimating = true;
+
+      // Generate heart positions
+      const positions = generateHeartPositions();
+      
+      // Create hearts with animation
+      positions.forEach((pos, index) => {
+        setTimeout(() => {
+          createHeart(pos.x, pos.y, modes[mode].class);
+        }, index * modes[mode].delay);
+      });
+
+      // Reset animation flag
+      setTimeout(() => {
+        isAnimating = false;
+      }, 3000);
+    }
+
+    function createHeart(x, y, animationClass) {
+      const heart = document.createElement('div');
+      heart.className = `heart-particle ${animationClass}`;
+      heart.innerHTML = '❤️';
+      heart.style.left = x + 'px';
+      heart.style.top = y + 'px';
+      
+      document.getElementById('heartContainer').appendChild(heart);
+    }
+
+    // Auto-start first animation
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        startAnimation('spiral');
+      }, 1000);
+    });
+
+    // Create floating sparkles
+    setInterval(() => {
+      const sparkle = document.createElement('div');
+      sparkle.innerHTML = '✨';
+      sparkle.style.position = 'fixed';
+      sparkle.style.left = Math.random() * window.innerWidth + 'px';
+      sparkle.style.top = window.innerHeight + 'px';
+      sparkle.style.fontSize = (Math.random() * 15 + 10) + 'px';
+      sparkle.style.pointerEvents = 'none';
+      sparkle.style.zIndex = '1000';
+      sparkle.style.opacity = '0.7';
+      sparkle.style.animation = 'sparkleFloat 3s linear forwards';
+      
+      document.body.appendChild(sparkle);
+      
+      setTimeout(() => sparkle.remove(), 3000);
+    }, 800);
+
+    // Sparkle animation
+    const sparkleStyle = document.createElement('style');
+    sparkleStyle.textContent = `
+      @keyframes sparkleFloat {
+        0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+        10% { opacity: 0.7; }
+        90% { opacity: 0.3; }
+        100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(sparkleStyle);
+  </script>
+</body>
+</html>
